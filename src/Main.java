@@ -14,15 +14,15 @@ public class Main {
         ArrayList<Data>  weights;
         
         posibilities = FileManager.getDataSet(
-                "/home/zexes/NetBeansProjects/Data/",
+                "/home/zexes/NetBeansProjects/Data/"+
                 "MP.txt"
         );
         int nb_criteres = posibilities.get(0).getNb_c();
-        int nb_possibilities = 10;//Data.obj_count;
+        int nb_possibilities = Data.obj_count;
         
         Data.obj_count=0;
         weights = FileManager.getDataSet(
-                "/home/zexes/NetBeansProjects/Data/",
+                "/home/zexes/NetBeansProjects/Data/"+
                 "POIDS.txt"
         );
         
@@ -67,6 +67,54 @@ public class Main {
         }
         
         
+        // 4) Matrice de Surclassement
+        double seuil_concord = 0.6;
+        String[][] ms = mc;
+                    
+        for (int i = 0; i < nb_possibilities; i++) {
+            for (int j = 0; j < nb_possibilities; j++) {
+                if(!mc[i][j].equals("-")){
+                    if(Double.valueOf(mc[i][j]) > seuil_concord )
+                        ms[i][j] = "1";
+                    else
+                        ms[i][j] = "0";
+                }
+            }   
+        }
+        
+        System.out.println("\n[MS]");
+        for (int i = 0; i < nb_possibilities; i++) {
+            for (int j = 0; j < nb_possibilities; j++) {
+                if(!ms[i][j].equals("-")){
+                    DecimalFormat df2 = new DecimalFormat("#.####");
+                    System.out.print(df2.format(Double.valueOf(ms[i][j])) +" | ");
+                }
+                else
+                    System.out.print(ms[i][j]+" | ");
+            }
+            System.out.println("");
+        }
+        
+        
+        System.out.println("\n[Max]\n"+max_row_matrix(ms));
+        
+        
+        
+        // 5) A'
+        ArrayList<Integer> indexesV = indexes(ms, max_row_matrix(ms));
+        
+        System.out.println("\n[A']");
+        for(int e : indexesV){
+            System.out.print(posibilities.get(e)+ " | ");
+            for (int j = 1; j < nb_criteres; j++) {
+                System.out.print(mp[e][j]+" | ");
+            }
+             System.out.println("");       
+        }
+        
+
+        
+        
     }
     
     public static String[][] concordance (String[][] mp, int n, String[] vw){
@@ -100,5 +148,42 @@ public class Main {
         }
         
         return sum;
+    }
+    
+    public static int max_row_matrix(String[][] ms){
+        int max = 0;
+        int sum;
+        for (int i = 0; i < ms.length; i++) {
+            sum =0;
+            for (int j = 0; j < ms.length ; j++) {
+                if(!ms[i][j].equals("-")){
+                    sum += Integer.valueOf(ms[i][j]);
+                }
+                
+            }
+            if (sum>max)
+                max = sum;
+        }
+        
+        return max;
+    }
+    
+    public static ArrayList<Integer> indexes(String[][] ms, int max_row){
+        ArrayList<Integer> v = new ArrayList();
+        int sum;
+        
+        for (int i = 0; i < ms.length; i++) {
+            sum = 0;
+            for (int j = 0; j < ms.length ; j++) {
+                if(!ms[i][j].equals("-")){
+                    sum += Integer.valueOf(ms[i][j]);
+                }
+                
+            }
+            if (sum == max_row)
+                v.add(i);
+        }
+        
+        return v;
     }
 }

@@ -19,7 +19,7 @@ public class FileManager {
      * Methodes
      */
     // Get data from file
-    public static ArrayList<Data> getDataSet(String fileLocation, String fileName){
+    public static ArrayList<Data> getDataSet(String fileLocation){
         ArrayList<Data> data = new ArrayList<>();
 
         /**
@@ -30,7 +30,7 @@ public class FileManager {
 
         try {
             // FileReader reads text files in the default encoding.
-            FileReader fileReader = new FileReader(fileLocation+fileName);
+            FileReader fileReader = new FileReader(fileLocation);
 
             // Always wrap FileReader in BufferedReader.
             BufferedReader bufferedReader = new BufferedReader(fileReader);
